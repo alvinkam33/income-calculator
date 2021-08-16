@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# Income Calculator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CRUD API and web application built using MERN stack. User fills in field of study, age and gender, then the application will call a locally-hosted API to get data on all degrees, filter by user-requested fields, then calculate the accumulative income of each degree until retirement and visually display a recommendation based on which degree provides the most income.
 
-## Available Scripts
+The data is collected from “Characteristics and median employment income of
+postsecondary graduates two years after graduation, by educational qualification and field of study” dataset from Statistics Canada, at https://doi.org/10.25318/3710012201-eng. It has been converted to JSON format and is found in `backend/data`.
 
-In the project directory, you can run:
+# Degree API routes
 
-### `npm start`
+### Create and Store Degree
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`POST /degree/`
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Required data params: name (String), gender (String), field (String), income_2018 (Number)
 
-### `npm test`
+Creates and stores new degree into the database.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Get All Degrees (optional filter)
 
-### `npm run build`
+`GET /degree/`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Optional URL params: field (String), gender (String)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Returns all degrees in the database. If one or both of the above params are specified, the API will filter results to match requested values. See example URL below:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`/degree/?field=Humanities&gender=male`
 
-### `npm run eject`
+### Get Degree by ID
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+`GET /degree/:degreeId`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Required URL params: degreeId (String)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Returns degree of specified ID.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Update Degree by Id
 
-## Learn More
+`PUT /degree/:degreeId`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Required URL params: degreeId (String)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Optional data params: name (String), gender (String), field (String), income_2018 (Number)
 
-### Code Splitting
+Updates degree of specified ID. The API will only update the degree with requested values, otherwise it will stay the same.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Delete Degree by ID
 
-### Analyzing the Bundle Size
+`DELETE /degree/:degreeId`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Required URL params: degreeId (String)
 
-### Making a Progressive Web App
+Deletes degree of specified ID.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+# Installations/Troubleshooting
 
-### Advanced Configuration
+Make sure to have MongoDB and Node (npm) downloaded:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+MongoDB: https://www.mongodb.com/try/download/community
+Node: https://nodejs.org/en/download/
 
-### Deployment
+If scripts run into errors, you may need to install these dependencies first:
+Concurrently: `npm install -g concurrently`
+React-scripts: `npm install -g react-scripts`
+Nodemon: `npm install -g nodemon`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+If on Windows, in `frontend/package.json`, change the following in the scripts:
+```sh
+"start": "PORT=3001 react-scripts start"
+to
+"start": "set PORT=3001 && react-scripts start"
+```
 
-### `npm run build` fails to minify
+# How to Run
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+From the root directory and in your command terminal,
+
+1. Enter into frontend directory
+
+```sh
+cd frontend
+```
+
+2. Populate database (only need to run once)
+
+```sh
+npm run populate-db
+```
+
+The script will run `/backend/data/script.js`, which wipes existing data, takes the dataset from the JSON files, and creates and stores degrees into the mongoDB.
+
+3. Build and run client and server
+
+```sh
+npm run dev
+```
+
+The script will automatically install all other dependencies and run both backend and frontend. 
+
+The server is hosted on `http://localhost:3000/`.
+The client is hosted on `http://localhost:3001/`.
