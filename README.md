@@ -60,8 +60,11 @@ MongoDB: https://www.mongodb.com/try/download/community
 Node: https://nodejs.org/en/download/
 
 If scripts run into errors, you may need to install these dependencies first:
+
 Concurrently: `npm install -g concurrently`
+
 React-scripts: `npm install -g react-scripts`
+
 Nodemon: `npm install -g nodemon`
 
 If on Windows, in `frontend/package.json`, change the following in the scripts:
