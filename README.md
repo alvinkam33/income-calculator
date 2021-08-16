@@ -56,6 +56,7 @@ Deletes degree of specified ID.
 Make sure to have MongoDB and Node (npm) downloaded:
 
 MongoDB: https://www.mongodb.com/try/download/community
+
 Node: https://nodejs.org/en/download/
 
 If scripts run into errors, you may need to install these dependencies first:
